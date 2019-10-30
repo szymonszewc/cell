@@ -11,6 +11,11 @@ class IF
     void backlight();
     void initialize();
     void display();
+
+    boolean i_want_to_see;
+    LiquidCrystal lcd();
+  
+  private:
     int rs;
     int e;
     int d4;
@@ -19,8 +24,7 @@ class IF
     int d7;
     int _buzz;
     int _light;
-    boolean i_want_to_see;
-    LiquidCrystal lcd();
+    LiquidCrystal lcd;
 };
 
 #endif

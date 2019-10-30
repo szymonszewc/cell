@@ -1,6 +1,6 @@
 #include "Arduino.h"
 #include "IF.hpp"
-IF::IF(int RS,int E, int D4, int D5, int D6, int D7,int buzz,int light)
+IF::IF(int RS,int E, int D4, int D5, int D6, int D7,int buzz,int light) : lcd(rs, e, d4, d5, d6, d7)
 {
     rs=RS;
     e=E;

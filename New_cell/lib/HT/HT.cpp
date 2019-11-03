@@ -1,9 +1,8 @@
 #include "Arduino.h"
 #include "HT.hpp"
-HT::HT(int pin, int buzzer)
+HT::HT(int pin)
 {
     _pin=pin;
-    buzz=buzzer;
 }
 void HT::initialize()
 {
@@ -15,13 +14,6 @@ int HT::changeT()
     lastTemperature=Temperature;
     Temperature=dht.getTemperature(); 
     if (dht.getStatusString() == "OK") {
-               if((Temperature>30)||Humidity<60){
-        digitalWrite(buzz,HIGH);
-        }
-        else
-        {
-        digitalWrite(buzz,LOW);
-        }
      return Temperature;
     }
     else
@@ -31,16 +23,9 @@ int HT::changeT()
 }
 int HT::changeH()
 {
-        lastHumidity=Humidity;
+    lastHumidity=Humidity;
     Humidity=dht.getHumidity(); 
     if (dht.getStatusString() == "OK") {
-        if((Humidity<60)||Temperature>30){
-        digitalWrite(buzz,HIGH);
-        }
-        else
-        {
-        digitalWrite(buzz,LOW);
-        }
      return Humidity;
     }
     else

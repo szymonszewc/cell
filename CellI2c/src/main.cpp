@@ -9,23 +9,16 @@
 
 int Humidity;
 int Temperature;
+unsigned long acTime;
+unsigned long Time;
+unsigned long dTime;
+int n=0;
 DHT dht;
 LiquidCrystal_I2C lcd(0x27, 16,2);
 boolean i_want_to_see;
 void backlight()
 {
   i_want_to_see=!i_want_to_see;
-  if(i_want_to_see)
-  {
-    lcd.display();
-    lcd.backlight();
-  }
-  else
-  {
-    lcd.noDisplay();
-    lcd.noBacklight();
-  }
-  
 }
 void setup() {
   // put your setup code here, to run once:
@@ -45,6 +38,11 @@ attachInterrupt(digitalPinToInterrupt(interrupt), backlight, FALLING);
 
 void loop() {
   // put your main code here, to run repeatedly:
+  while (acTime<=4,294,967,295)
+  {
+  acTime=(millis()-(4,294,967,295*n));
+  dTime=acTime-Time;
+  if(dTime>=1000){
   Humidity=dht.getHumidity();
   Temperature=dht.getTemperature();
    if (dht.getStatusString() == "OK") {
@@ -65,5 +63,18 @@ void loop() {
        digitalWrite(led,LOW);
     }
    }  
-  delay(1000);
+   Time=acTime;
+  }
+  if(i_want_to_see)
+  {
+    lcd.display();
+    lcd.backlight();
+  }
+  else
+  {
+    lcd.noDisplay();
+    lcd.noBacklight();
+  }
+}
+n++;
 }

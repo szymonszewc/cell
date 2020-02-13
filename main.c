@@ -21,6 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "dma.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -46,21 +47,19 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-uint32_t a=0;
-uint32_t count=0;
-uint32_t prev=0;
-uint32_t cons=15;
-uint32_t c=0;
-uint32_t A[10]={1,1,1,1,100,1,1,1,1,30};
-uint32_t i=0;
-uint32_t j=0;
-float value=0;
-float sr=0;
-float ar=0;
+uint32_t wynik;
+int count=0;
+int cons=150;
+int c;
+float srednia=0;
+float arytmetyczna=0;
+float prev=0;
+float pomiar=0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void HAL_SYSTICK_Callback();
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -99,10 +98,11 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_ADC1_Init();
   MX_USART2_UART_Init();
+  MX_DMA_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-  HAL_ADC_Start(&hadc1);
+  HAL_ADC_Start_DMA(&hadc1,&wynik,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -164,32 +164,19 @@ void HAL_SYSTICK_Callback()
 {
 	count++;
 	if(count<=100){
-	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK)
-	 	  {
-	 	   a = HAL_ADC_GetValue(&hadc1);
-	 	    HAL_ADC_Start(&hadc1);
-	 	  }
-		/*if(j<10)
-		{
-		a=A[j];*/
-	  sr=(prev*(cons-1)+a)/cons;
-	  prev=sr;
-	  c=c+a;
-	  j++;
+
+	  srednia=(prev*(cons-1)+wynik)/cons;
+	  prev=srednia;
+	  c=c+wynik;
 	}
-		/*else
-		{
-			j=0;
-		}*/
 	else
 	{
 		count=0;
-		value=sr;
-		ar=c/100;
+		pomiar=srednia;
+		arytmetyczna=c/100;
 		c=0;
 	}
 }
-
 /* USER CODE END 4 */
 
 /**
